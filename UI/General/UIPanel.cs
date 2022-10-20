@@ -8,15 +8,12 @@ using UnityEngine;
 /// </summary>
 public enum eUIPanelType
 {
-    MainMenuPanel = 0,
-    RoomMenuPanel,
+    BasePanel = 0,
     SettingPanel,
-    BagPanel,
-    NotesPanel,
     ConfirmPopupPanel,
     LaunchPanel,
     LoadingPanel,
-    ChooseCharacterPanel
+    ConfigPanel
 }
 
 public class UIPanel

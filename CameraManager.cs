@@ -13,7 +13,7 @@ public class CameraManager : MonoBehaviour
 
     private void Awake()
     {
-        Utils.PlaceObjByEllipse(CameraPrefab_Normal,center, 12,Ellipse_a,Ellipse_b);
+        //Utils.PlaceObjByEllipse(CameraPrefab_Normal,center, 12,Ellipse_a,Ellipse_b);
     }
 
     

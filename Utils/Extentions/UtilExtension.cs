@@ -1,9 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public static class UtilExtension
 {
+  
+
+
     public static TValue TryGetValue<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key)
     {
         /// <summary>
@@ -67,4 +73,77 @@ public static class UtilExtension
         }
     }
 
+    public static char ValidateInt(string text, int charIndex, char charToValidate)
+    {
+        if ((charToValidate >= '0' && charToValidate <= '9'))
+        {
+            return charToValidate;
+        }
+
+        return char.MinValue;
+    }
+
+    public static char ValidateFloat(string text, int charIndex, char charToValidate)
+    {
+        if ((charToValidate >= '0' && charToValidate <= '9') || (charIndex > 0 && charToValidate == '.'))
+        {
+            return charToValidate;
+        }
+        return char.MinValue;
+    }
+
+    public static void InputIntAndSave(TMP_InputField input, string key = nameof(Input),int defaultValue = 2)
+    {
+        if (PlayerPrefs.HasKey(key))
+        {
+            input.text = PlayerPrefs.GetInt(key).ToString();
+            Debug.Log(key+ " : " + input.text);
+        }
+        else 
+        {
+            input.text = defaultValue.ToString();
+        }
+        
+        input.onValidateInput += ValidateInt;
+        input.onValueChanged.AddListener((value) =>
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                value = 1.ToString();
+            }
+            else if (int.Parse(value) < 1)
+            {
+                input.text = 1.ToString();
+                value = 1.ToString();
+            }
+            PlayerPrefs.SetInt(key, int.Parse(value));
+        });
+    }
+
+    public static void InputFloatAndSave(TMP_InputField input, string key = nameof(Input),float defaultValue = 2.8f)
+    {
+        if (PlayerPrefs.HasKey(key))
+        {
+            input.text = PlayerPrefs.GetFloat(key).ToString();
+        }
+        else
+        {
+            input.text = defaultValue.ToString();
+        }
+
+        input.onValidateInput += ValidateFloat;
+        input.onValueChanged.AddListener((value) =>
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                value = 1.ToString();
+            }
+            else if (float.Parse(value) < 1)
+            {
+                input.text = 1.ToString();
+                value = 1.ToString();
+            }
+            PlayerPrefs.SetFloat(key, float.Parse(value));
+        });
+    }
 }
