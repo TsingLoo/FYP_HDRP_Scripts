@@ -97,11 +97,11 @@ public static class UtilExtension
         if (PlayerPrefs.HasKey(key))
         {
             input.text = PlayerPrefs.GetInt(key).ToString();
-            Debug.Log(key+ " : " + input.text);
         }
         else 
         {
             input.text = defaultValue.ToString();
+            PlayerPrefs.SetInt(key, int.Parse(input.text));
         }
         
         input.onValidateInput += ValidateInt;
@@ -116,6 +116,9 @@ public static class UtilExtension
                 input.text = 1.ToString();
                 value = 1.ToString();
             }
+        });
+        input.onEndEdit.AddListener((value) =>
+        {
             PlayerPrefs.SetInt(key, int.Parse(value));
         });
     }
@@ -129,6 +132,7 @@ public static class UtilExtension
         else
         {
             input.text = defaultValue.ToString();
+            PlayerPrefs.SetFloat(key, float.Parse(input.text));
         }
 
         input.onValidateInput += ValidateFloat;
@@ -143,6 +147,9 @@ public static class UtilExtension
                 input.text = 1.ToString();
                 value = 1.ToString();
             }
+        });
+        input.onEndEdit.AddListener((value) =>
+        {
             PlayerPrefs.SetFloat(key, float.Parse(value));
         });
     }

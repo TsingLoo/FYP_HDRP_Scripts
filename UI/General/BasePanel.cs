@@ -1,3 +1,4 @@
+using Mono.CompilerServices.SymbolWriter;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,11 +11,13 @@ public class BasePanel: MonoBehaviour
 
     public void Awake()
     {
+ 
         canvasGroup = gameObject.GetOrAddComponent<CanvasGroup>();
 
     }
     public virtual void OnEnter()
     {
+        if (canvasGroup == null) return;
         canvasGroup.alpha = 1;
         canvasGroup.blocksRaycasts = true;
         //UIManager.Instance.PushPanel(GetPanelType());
@@ -27,18 +30,21 @@ public class BasePanel: MonoBehaviour
 
     public virtual void OnPause()
     {
+        if (canvasGroup == null) return;
         canvasGroup.alpha = 1;
         canvasGroup.blocksRaycasts = false;
     }
 
     public virtual void OnResume()
     {
+        if (canvasGroup == null) return;
         canvasGroup.alpha = 1;
         canvasGroup.blocksRaycasts = true;
     }
 
     public virtual void OnExit()
     {
+        if (canvasGroup == null) return;
         canvasGroup.alpha = 0;
         canvasGroup.blocksRaycasts = false;
         //UIManager.Instance.PopPanel();

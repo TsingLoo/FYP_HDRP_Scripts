@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainController : MonoBehaviour
 {
@@ -10,26 +11,23 @@ public class MainController : MonoBehaviour
 
         UIManager.Instance.UIPanelInfoSaveInJson();
         UIManager.Instance.OpenPanel(eUIPanelType.LaunchPanel);
-        //Debug.Log(PlayerPrefs.GetString("Maweasda",null));
 
+        SceneManager.sceneLoaded += SceneLoadedHandler;
+        //Debug.Log(PlayerPrefs.GetString("Maweasda",null))
     }
 
-    private void bandMatrix(int n, int width)
+    private void SceneLoadedHandler(Scene currentScene,LoadSceneMode loadSceneMode) 
     {
-        for (int i = 0; i < n; i++)
+        UIManager.Instance.PopPanel();
+
+        Debug.Log("[Scene]Scene " + currentScene.buildIndex + " loaded successfully");
+
+        if (currentScene.buildIndex == 1) 
         {
-            for (int j = 0; j < n; j++)
-            {
-                if (j + 1 < width)
-                {
-                    Debug.Log("*");
-                    Debug.Log("  ");
-                }
-                else 
-                {
-                    Debug.Log("0");
-                }
-            }
+            CameraManager.Instance.PlaceCamera(PlayerPrefs.GetInt(SaveDataManager.CAMERA_GENERATE_TYPE));
         }
+
+
     }
+
 }

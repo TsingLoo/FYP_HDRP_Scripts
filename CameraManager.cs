@@ -1,19 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using taecg.tools.ImageExporter;
 using UnityEngine;
 
-public class CameraManager : MonoBehaviour
-{
+public class CameraManager : SingletonForMonobehaviour<CameraManager>
+{ 
     [SerializeField] GameObject CameraPrefab_Normal;
     [SerializeField] Transform center;
 
-    [SerializeField][Range(0, 20)] float Ellipse_a;
-    [SerializeField][Range(0, 20)] float Ellipse_b;
 
-
-    private void Awake()
+    public void PlaceCamera(int CameraPlaceType) 
     {
-        //Utils.PlaceObjByEllipse(CameraPrefab_Normal,center, 12,Ellipse_a,Ellipse_b);
+
+        int nums = PlayerPrefs.GetInt(SaveDataManager.CAMERA_NUM);
+        float height = PlayerPrefs.GetFloat(SaveDataManager.CAMERA_HEIGHT);
+
+        Debug.Log("[CameraManager]nums:" + nums.ToString()+" height:" + height.ToString() );
+
+        switch (CameraPlaceType)
+        {
+            case (int)ConfigPanel.eCameraGenerateMethod.Ellipse:
+                Utils.PlaceObjByEllipse(CameraPrefab_Normal, center,nums,PlayerPrefs.GetFloat(SaveDataManager.ELLIPSE_MAJORAXIS),PlayerPrefs.GetFloat(SaveDataManager.ELLIPSE_MINORAXIS),height);
+
+                break;
+            default:
+                Debug.LogWarning("NO TARGET CASE");
+                break;
+        
+        }
+                
+
     }
 
     
