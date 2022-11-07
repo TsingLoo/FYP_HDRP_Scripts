@@ -13,7 +13,8 @@ public enum eUIPanelType
     ConfirmPopupPanel,
     LaunchPanel,
     LoadingPanel,
-    ConfigPanel
+    ChooseBluePrintPanel,
+    BoomViewPanel
 }
 
 public class UIPanel

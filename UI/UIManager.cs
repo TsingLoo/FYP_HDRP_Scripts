@@ -14,16 +14,22 @@ public class UIManager : Singleton<UIManager>
     public const int LEFT_HIDE_VALUE = -1500;
 
 
+#if UNITY_EDITOR
     //Unity Editor：<path to project folder>/Assets
     readonly string panelPrefabPath = Application.dataPath + @"/Bundles/Resources/Prefabs/UI/Panel/";
-    readonly string jsonPath = Application.dataPath + @"/Bundles/Json/UIJson.json";
+    readonly string jsonPath = Application.dataPath + @"/Bundles/Resources/Json/UIJson.json";
+#elif PLATFORM_ANDROID
+    readonly string panelPrefabPath = Application.dataPath + @"";
+
+#endif 
+
 
     /// <summary>
     /// 记录了所有UIPanel类的列表
     /// </summary>
     private List<UIPanel> AllPanelList;
     //开发一个给出面板类型，就实例化该面板，并返回面板上挂载的BasePanel组件的方法
-    private Dictionary<eUIPanelType, BasePanel> panelDict;
+    public Dictionary<eUIPanelType, BasePanel> panelDict;
     //使用栈来存储当前场景中正在显示的Panel
     private Stack<BasePanel> panelStack;
 
@@ -34,7 +40,7 @@ public class UIManager : Singleton<UIManager>
         {
             if (canvasTransform == null)
                 //通过名称获取Canvas上的Transform，所以不要有同名Canvas
-                canvasTransform = GameObject.Find("MainCanvas").transform;
+                canvasTransform = GameObject.Find("MainCanvas_VR").transform;
             return canvasTransform;
         }
     }
@@ -64,12 +70,17 @@ public class UIManager : Singleton<UIManager>
     /// <summary>
     /// 利用此方法自动注册、更新面板的预制体。
     /// </summary>
+    /// 
+
+#if false
     public void UIPanelInfoSaveInJson()
     {
         Debug.Log("[UIManager]开始更新ALLPanelList");
+
         AllPanelList = ReadJsonFile(jsonPath);
         //读取存储面板prefeb的文件夹的信息
         DirectoryInfo folder = new DirectoryInfo(panelPrefabPath);
+
 
         //遍历储存面板prefab的文件夹里每一个prefab的名字，并把名字转换为对应的eUIPanelType中的枚举（一种注册的办法）
         //再检查UIPanelType是否存在 于List里,若存在List里则更新path,若不存在List里则加上
@@ -106,6 +117,7 @@ public class UIManager : Singleton<UIManager>
         //AssetDatabase.Refresh();
         Debug.Log("[UIManager]结束更新ALLPanelList");
     }
+#endif
 
     ///<summary>
     ///调用此方法打开相关面板，不传参
@@ -159,18 +171,30 @@ public class UIManager : Singleton<UIManager>
     }
 
 
+
+
     public BasePanel GetPanel(eUIPanelType type)
     {
         if (panelDict == null)
-            panelDict = new Dictionary<eUIPanelType, BasePanel>();
+        {
+            Debug.Log("[UIManager]Failed to get " + type.ToString() +" because dict has not been initialized" );
+            return null;
+        } 
         //【扩展方法】通过type查找字典里对应的BasePanel，若找不到则返回null，具体见Extension部分
         BasePanel panel = panelDict.TryGetValue(type);
+        if (panel == null)
+        {
+            Debug.Log("[UIManager]Failed to get panel" + type.ToString());
+        }
 
+#if false
         //在现有字典里没有找到
         //只能去json里找type对应的prefab的路径并加载
         //再加进字典里以便下次在字典中查找
         if (panel == null)
         {
+            
+
             //【扩展方法】通过Type查找列表里对应的UIPanel，若找不到则返回null，具体见Extension部分
             string path = AllPanelList.SearchPanelForType(type).UIPanelPath;
             if (path == null)
@@ -188,6 +212,8 @@ public class UIManager : Singleton<UIManager>
             return instPanel.GetComponent<BasePanel>();
         }
 
+        Debug.Log("[UIManager]The got panel is " + panel.name);
+#endif
         return panel;
     }
 
@@ -213,6 +239,7 @@ public class UIManager : Singleton<UIManager>
             Debug.LogWarning("[UIManager]" + type + " 未挂载组件 " + typeof(BasePanel));
             return;
         }
+        Debug.Log("[UIManager]" + panel.name  + " is push into stack" +" the stack has " + panelStack.Count +" items " );
         panel.OnEnter();
     }
 

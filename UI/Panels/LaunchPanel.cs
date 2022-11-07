@@ -6,7 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 //using DG.Tweening;
 using System.Linq;
-using Unity.VisualScripting;
+
 using UnityEngine.SceneManagement;
 //using Photon.Pun;
 //using Cysharp.Threading.Tasks;
@@ -21,15 +21,17 @@ public class LaunchPanel : BasePanel
 
     public override void OnEnter() 
     {
+        base.OnEnter();
         obj_startGame.GetOrAddComponent<Button>().onClick.AddListener(OnClickStart);
-        obj_setting.GetOrAddComponent<Button>().onClick.AddListener(OnClickSetting);
-        obj_exitGame.GetOrAddComponent<Button>().onClick.AddListener(OnClickExit);
+        //obj_setting.GetOrAddComponent<Button>().onClick.AddListener(OnClickSetting);
+       // obj_exitGame.GetOrAddComponent<Button>().onClick.AddListener(OnClickExit);
     }
 
     void OnClickStart() 
     {
         UIManager.Instance.PopPanel();
-        UIManager.Instance.OpenPanel(eUIPanelType.ConfigPanel);
+        SceneManager.LoadScene("UI_VR", LoadSceneMode.Additive);
+        MainController.Instance.hasStarted = true;
     }
 
     void OnClickSetting() 
@@ -60,4 +62,5 @@ public class LaunchPanel : BasePanel
     {
     
     }
+
 }

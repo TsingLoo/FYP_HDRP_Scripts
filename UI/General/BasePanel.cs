@@ -9,17 +9,20 @@ public class BasePanel: MonoBehaviour
     private CanvasGroup canvasGroup;
     protected IPanelParams panelParams;
 
-    public void Awake()
+    public void OnEnable()
     {
- 
         canvasGroup = gameObject.GetOrAddComponent<CanvasGroup>();
-
     }
     public virtual void OnEnter()
     {
-        if (canvasGroup == null) return;
+        if (canvasGroup == null)
+        {
+            canvasGroup = gameObject.GetOrAddComponent<CanvasGroup>();
+        } 
         canvasGroup.alpha = 1;
         canvasGroup.blocksRaycasts = true;
+        //Debug.Log("[UIManager]" + panelType.ToString() + " is showing up" );
+        Debug.Log("[UIManager]" + name + "  " + canvasGroup.alpha + " " + canvasGroup.blocksRaycasts);
         //UIManager.Instance.PushPanel(GetPanelType());
     }
 
@@ -45,6 +48,7 @@ public class BasePanel: MonoBehaviour
     public virtual void OnExit()
     {
         if (canvasGroup == null) return;
+        Debug.Log("[UIManager]" + name + " is hiding");
         canvasGroup.alpha = 0;
         canvasGroup.blocksRaycasts = false;
         //UIManager.Instance.PopPanel();
