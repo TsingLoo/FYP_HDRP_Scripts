@@ -27,11 +27,13 @@ public class LaunchPanel : BasePanel
        // obj_exitGame.GetOrAddComponent<Button>().onClick.AddListener(OnClickExit);
     }
 
-    void OnClickStart() 
+    public void OnClickStart() 
     {
+
         UIManager.Instance.PopPanel();
-        SceneManager.LoadScene("UI_VR", LoadSceneMode.Additive);
-        MainController.Instance.hasStarted = true;
+        UIManager.Instance.OpenPanel(eUIPanelType.GuidePanel);
+        //SceneManager.LoadScene("UI_VR", LoadSceneMode.Additive);
+        //MainController.Instance.hasStarted = true;
     }
 
     void OnClickSetting() 

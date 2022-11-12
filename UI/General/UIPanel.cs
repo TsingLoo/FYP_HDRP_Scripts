@@ -14,7 +14,8 @@ public enum eUIPanelType
     LaunchPanel,
     LoadingPanel,
     ChooseBluePrintPanel,
-    BoomViewPanel
+    BoomViewPanel,
+    GuidePanel
 }
 
 public class UIPanel

@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 
 using System;
 using TMPro;
+using UnityEngine.Events;
 
 public class Utils: MonoBehaviour
 {
@@ -59,7 +60,14 @@ public class Utils: MonoBehaviour
     }
 
 
-
+    public static IEnumerator Delay(float time, UnityAction doAfterDelay = null)
+    {
+        yield return new WaitForSeconds(time);
+        if (doAfterDelay != null)
+        {
+            doAfterDelay.Invoke();
+        }
+    }
 
 
 
