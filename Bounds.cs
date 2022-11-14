@@ -12,7 +12,6 @@ public class Bounds : MonoBehaviour
    
 
     [SerializeField] int PID;
-    [SerializeField] Camera cam;
 
     //8个标志位 ，用来在scene里预览
     Vector3[] points;
@@ -22,28 +21,71 @@ public class Bounds : MonoBehaviour
     private BoxCollider cube;
     string tuple = "";
 
-    void Start()
+    void Awake()
     {
-        //获取BoxCollider组件，此组件仅提供包围盒，不参与物理计算
+        //获取BoxCollider组件，此组件仅提供包围盒，不参与物理计算,初始化
         cube = gameObject.GetComponent<BoxCollider>();
         cube.isTrigger = true;
 
-        //获取八个顶点的世界空间三维坐标
-        points = Utils.GetBoxColliderVertexPositions(cube);
+        //UpdateDataTuple();
 
-        //生成提示点
-        GeneratePointByVector3();
+        //GetDataTuple_2D();
+        //GetDataTuple_3D();
+        //GenerateCameraX_3D();
+    }
 
-        //将这八个顶点转为视口坐标
-        points2D =  Utils.ConvertWorldPointsToViewportPoints(points,cam);
-
-
-        GenerateCameraX_2D();
-        GenerateCameraX_3D();
+    private void Start()
+    {
+        UpdateDataTuple();
 
     }
 
-    void GenerateCameraX_2D() 
+    public void UpdateDataTuple() 
+    {
+        points = Utils.GetBoxColliderVertexPositions(cube);
+        GeneratePointByVector3();
+    }
+
+    public string GetDataTuple_2D(Camera cam) 
+    {
+        points2D = Utils.ConvertWorldPointsToViewportPoints(points, cam);
+        tuple = "";
+        AddPropertyToTuple(PID.ToString());
+        for (int i = 0; i < points.Length; i++)
+        {
+            AddPropertyToTuple((points2D[i].x * (MainController.RESOLUTION_WIDTH)).ToString());
+            AddPropertyToTuple(((1 - points2D[i].y) * (MainController.RESOLUTION_HEIGHT)).ToString());
+        }
+        AddPropertyToTuple(((cam.WorldToViewportPoint(gameObject.transform.position).x * MainController.RESOLUTION_WIDTH)).ToString());
+        AddPropertyToTuple(((1 - cam.WorldToViewportPoint(gameObject.transform.position).y) * MainController.RESOLUTION_HEIGHT).ToString());
+        return tuple;
+    }
+
+    public string GetDataTuple_3D(Camera cam) 
+    {
+        tuple = "";
+        AddPropertyToTuple(PID.ToString());
+
+        //写入八个顶点的世界坐标
+        for (int i = 0; i < points.Length; i++)
+        {
+            Debug.Log("[IO]This point is " + points[i].ToString());
+            AddPropertyToTuple((points[i].x).ToString());
+            Debug.Log("[IO]This point is " + (points[i].x).ToString());
+            AddPropertyToTuple((points[i].z).ToString());
+            AddPropertyToTuple((points[i].y).ToString());
+            //Height 
+            //AddPropertyToTuple(transform.position.y.ToString());
+        }
+
+        AddPropertyToTuple(transform.position.x.ToString());
+        AddPropertyToTuple(transform.position.z.ToString());
+        AddPropertyToTuple(transform.position.y.ToString());
+        return tuple;
+    }
+
+
+    void GenerateCameraX_2D(Camera cam) 
     {
         //Frame Index
         AddPropertyToTuple("0");
