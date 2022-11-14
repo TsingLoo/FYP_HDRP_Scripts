@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 using Unity.VisualScripting;
 using System;
 using TMPro;
+using System.IO;
 
 public class Utils: MonoBehaviour
 {
@@ -127,5 +128,54 @@ public class Utils: MonoBehaviour
 
         }
     }
+
+    public static Vector3[] GetBoxColliderVertexPositions(BoxCollider boxcollider)
+    {
+        var vertices = new Vector3[8];
+        //下面4个点
+        vertices[0] = boxcollider.transform.TransformPoint(boxcollider.center + new Vector3(boxcollider.size.x, -boxcollider.size.y, boxcollider.size.z) * 0.5f);
+        vertices[1] = boxcollider.transform.TransformPoint(boxcollider.center + new Vector3(-boxcollider.size.x, -boxcollider.size.y, boxcollider.size.z) * 0.5f);
+        vertices[2] = boxcollider.transform.TransformPoint(boxcollider.center + new Vector3(-boxcollider.size.x, -boxcollider.size.y, -boxcollider.size.z) * 0.5f);
+        vertices[3] = boxcollider.transform.TransformPoint(boxcollider.center + new Vector3(boxcollider.size.x, -boxcollider.size.y, -boxcollider.size.z) * 0.5f);
+        //上面4个点
+        vertices[4] = boxcollider.transform.TransformPoint(boxcollider.center + new Vector3(boxcollider.size.x, boxcollider.size.y, boxcollider.size.z) * 0.5f);
+        vertices[5] = boxcollider.transform.TransformPoint(boxcollider.center + new Vector3(-boxcollider.size.x, boxcollider.size.y, boxcollider.size.z) * 0.5f);
+        vertices[6] = boxcollider.transform.TransformPoint(boxcollider.center + new Vector3(-boxcollider.size.x, boxcollider.size.y, -boxcollider.size.z) * 0.5f);
+        vertices[7] = boxcollider.transform.TransformPoint(boxcollider.center + new Vector3(boxcollider.size.x, boxcollider.size.y, -boxcollider.size.z) * 0.5f);
+
+        return vertices;
+    }
+
+    public static Vector2[] ConvertWorldPointsToViewportPoints(Vector3[] worldPoints,Camera cam) 
+    {
+        var points2D = new Vector2[worldPoints.Length];
+        for (int i = 0; i < worldPoints.Length; i++)
+        {
+
+            points2D[i] = cam.WorldToViewportPoint(worldPoints[i]);
+            Debug.Log(cam.WorldToViewportPoint(worldPoints[i]));
+            Debug.Log(points2D[i]);
+        }
+        return points2D;
+
+    }
+
+    public static void WriteFileByLine( string file_name, string str_info, string file_path = "Folder") 
+    {
+        StreamWriter sw;
+        FileInfo file_info = new FileInfo(file_path + "//" + file_name);
+        if (!file_info.Exists)
+        {
+            sw = file_info.CreateText();//创建一个用于写入 UTF-8 编码的文本  
+            Debug.Log("[IO]文件 "+ file_name + " 创建成功！");
+        }
+        else
+        {
+            sw = file_info.AppendText();//打开现有 UTF-8 编码文本文件以进行读取  
+        } 
+        sw.WriteLine(str_info);
+        sw.Close();
+        sw.Dispose();//文件流释放  
+    }  
 
 }

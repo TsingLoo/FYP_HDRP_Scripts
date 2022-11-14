@@ -1,18 +1,21 @@
+using Jumpy;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using taecg.tools.ImageExporter;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CameraManager : SingletonForMonobehaviour<CameraManager>
 { 
     [SerializeField] GameObject CameraPrefab_Normal;
     [SerializeField] Transform center;
 
+    private UnityAction BeginToExport;
+    private int BeginFrameCount; 
 
     public void PlaceCamera(int CameraPlaceType) 
     {
-
         int nums = PlayerPrefs.GetInt(SaveDataManager.CAMERA_NUM);
         float height = PlayerPrefs.GetFloat(SaveDataManager.CAMERA_HEIGHT);
 
@@ -29,11 +32,33 @@ public class CameraManager : SingletonForMonobehaviour<CameraManager>
                 break;
         
         }
-                
-
     }
 
-    
+    public void FramesSetting(int FramesSettingType) 
+    {
+        switch (FramesSettingType)
+        {
+            case (int)ConfigPanel.eFramesSettings.GivenFrameCount:
+                BeginFrameCount = PlayerPrefs.GetInt(SaveDataManager.START_FRAME);
+                break;
+            default:
+                Debug.LogWarning("NO TARGET CASE");
+                break;
+
+        }
+    }
+
+    private void Update()
+    {
+        
+    }
+
+    private void InvokeBeginToExport() 
+    {
+        //if(Time.frameCount == S)
+    }
+
+
 
 
 

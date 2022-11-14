@@ -5,8 +5,13 @@ using UnityEngine.SceneManagement;
 
 public class MainController : MonoBehaviour
 {
+    public const int RESOLUTION_WIDTH = 1920;
+    public const int RESOLUTION_HEIGHT = 1080;
+
     private void Start()
     { 
+        
+
         DontDestroyOnLoad(gameObject);
 
         UIManager.Instance.UIPanelInfoSaveInJson();
@@ -26,8 +31,6 @@ public class MainController : MonoBehaviour
         {
             CameraManager.Instance.PlaceCamera(PlayerPrefs.GetInt(SaveDataManager.CAMERA_GENERATE_TYPE));
         }
-
-
     }
 
 }
