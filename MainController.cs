@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MainController : MonoBehaviour
 {
-    public const int RESOLUTION_WIDTH = 1920;
-    public const int RESOLUTION_HEIGHT = 1080;
+   
 
     private void Start()
     { 
@@ -19,6 +19,23 @@ public class MainController : MonoBehaviour
 
         SceneManager.sceneLoaded += SceneLoadedHandler;
         //Debug.Log(PlayerPrefs.GetString("Maweasda",null))
+
+        DirectoryInfo Image_subsets = new DirectoryInfo(CameraManager.Image_subsets);
+        if (Image_subsets.Exists)
+        {
+            Image_subsets.Delete(true);
+            Debug.Log("[IO]" + Image_subsets.ToString() + " have been deleted");
+        }
+
+        DirectoryInfo matchings = new DirectoryInfo(CameraManager.matchings);
+        if (matchings.Exists)
+        {
+            matchings.Delete(true);
+            Debug.Log("[IO]" + matchings.ToString() + " have been deleted");
+        }
+
+        Directory.CreateDirectory(CameraManager.matchings);
+        Debug.Log("[IO]文件夹" + CameraManager.matchings + "创建成功");
     }
 
     private void SceneLoadedHandler(Scene currentScene,LoadSceneMode loadSceneMode) 

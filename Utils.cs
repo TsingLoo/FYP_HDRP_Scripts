@@ -8,6 +8,7 @@ using Unity.VisualScripting;
 using System;
 using TMPro;
 using System.IO;
+using taecg.tools.ImageExporter;
 
 public class Utils: MonoBehaviour
 {
@@ -122,7 +123,8 @@ public class Utils: MonoBehaviour
             {
                 var Obj = Instantiate(go, pos, Quaternion.identity);
                 Obj.name = "Camera" + i.ToString();
-                go.GetComponent<Camera>().targetDisplay = i;
+                Obj.GetComponent<Camera>().targetDisplay = i;
+                Obj.GetOrAddComponent<ImageExporterController>().cameraIndex= i;
                 Obj.transform.LookAt(lookatTransform.position);
             }
 
@@ -153,29 +155,11 @@ public class Utils: MonoBehaviour
         {
 
             points2D[i] = cam.WorldToViewportPoint(worldPoints[i]);
-            Debug.Log(cam.WorldToViewportPoint(worldPoints[i]));
-            Debug.Log(points2D[i]);
+            //Debug.Log(cam.WorldToViewportPoint(worldPoints[i]));
+            //Debug.Log(points2D[i]);
         }
         return points2D;
 
-    }
-
-    public static void WriteFileByLine( string file_name, string str_info, string file_path = "Folder") 
-    {
-        StreamWriter sw;
-        FileInfo file_info = new FileInfo(file_path + "//" + file_name);
-        if (!file_info.Exists)
-        {
-            sw = file_info.CreateText();//创建一个用于写入 UTF-8 编码的文本  
-            Debug.Log("[IO]文件 "+ file_name + " 创建成功！");
-        }
-        else
-        {
-            sw = file_info.AppendText();//打开现有 UTF-8 编码文本文件以进行读取  
-        } 
-        sw.WriteLine(str_info);
-        sw.Close();
-        sw.Dispose();//文件流释放  
-    }  
+    } 
 
 }
