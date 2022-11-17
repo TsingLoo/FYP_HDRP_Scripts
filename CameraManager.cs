@@ -14,8 +14,10 @@ public class CameraManager : SingletonForMonobehaviour<CameraManager>
     public const int RESOLUTION_WIDTH = 1920;
     public const int RESOLUTION_HEIGHT = 1080;
 
-    public const string Image_subsets = nameof(Image_subsets);
-    public const string matchings = nameof(matchings);
+    //public const string Image_subsets = nameof(Image_subsets);
+    public const string Image_subsets = @"F:\PycharmProjects\MultiviewX_FYP\Image_subsets";    
+    //public const string matchings = nameof(matchings);
+    public const string matchings = @"F:\PycharmProjects\MultiviewX_FYP\matchings";
 
     public enum eFileExtention
     {
@@ -77,11 +79,11 @@ public class CameraManager : SingletonForMonobehaviour<CameraManager>
 
     void Update()
     {
-        Debug.Log("[IO]FrameCount" + Time.frameCount + BeginFrameCount + "  " + EndFrameCount);
+        Debug.Log("[IO]FrameCount " + Time.frameCount + BeginFrameCount + "  " + EndFrameCount);
         if (Time.frameCount >= BeginFrameCount && Time.frameCount <= EndFrameCount)
         {
             
-            Debug.Log("[IO]FrameCount" + Time.frameCount);
+            Debug.Log("[IO]FrameCount " + Time.frameCount);
             ExportThisFrame?.Invoke("." + ImageFormat.ToString());
         }
         else if (Time.frameCount > EndFrameCount)

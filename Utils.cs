@@ -124,7 +124,7 @@ public class Utils: MonoBehaviour
                 var Obj = Instantiate(go, pos, Quaternion.identity);
                 Obj.name = "Camera" + i.ToString();
                 Obj.GetComponent<Camera>().targetDisplay = i;
-                Obj.GetOrAddComponent<ImageExporterController>().cameraIndex= i;
+                Obj.GetOrAddComponent<ImageExporterController>().cameraIndex= i + 1;
                 Obj.transform.LookAt(lookatTransform.position);
             }
 

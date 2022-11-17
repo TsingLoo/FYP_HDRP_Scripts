@@ -139,7 +139,7 @@ namespace taecg.tools.ImageExporter
                     break;
             }
 
-            File.WriteAllBytes(CameraManager.Image_subsets + "/C" +cameraIndex.ToString() + "/"  + GetXDigitNum(4,(Time.frameCount - CameraManager.Instance.BeginFrameCount)) + fileExtention, bytes);
+            File.WriteAllBytes(CameraManager.Image_subsets + "/C" + cameraIndex.ToString() + "/"  + GetXDigitNum(4,(Time.frameCount - CameraManager.Instance.BeginFrameCount)) + fileExtention, bytes);
 
             yield return new WaitForEndOfFrame();
         }
