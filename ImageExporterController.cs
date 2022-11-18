@@ -65,7 +65,7 @@ namespace taecg.tools.ImageExporter
         {
             string file_name = "Camera" + cameraIndex + suffix;
   
-            FileInfo file_info = new FileInfo(CameraManager.matchings + "//" + file_name);
+            FileInfo file_info = new FileInfo(MainController.Instance.matchings + "//" + file_name);
 
             if (!file_info.Exists)
             {
@@ -81,8 +81,8 @@ namespace taecg.tools.ImageExporter
 
         private void InitImageFile() 
         {
-            Directory.CreateDirectory(CameraManager.Image_subsets + "/C" + cameraIndex.ToString());
-            Debug.Log("[IO]文件夹" + CameraManager.Image_subsets + "/C" + cameraIndex.ToString() + "创建成功");
+            Directory.CreateDirectory(MainController.Instance.Image_subsets + "/C" + cameraIndex.ToString());
+            Debug.Log("[IO]文件夹" + MainController.Instance.Image_subsets + "/C" + cameraIndex.ToString() + "创建成功");
         }
 
         private void FinishFile(StreamWriter sw)
@@ -139,7 +139,7 @@ namespace taecg.tools.ImageExporter
                     break;
             }
 
-            File.WriteAllBytes(CameraManager.Image_subsets + "/C" + cameraIndex.ToString() + "/"  + GetXDigitNum(4,(Time.frameCount - CameraManager.Instance.BeginFrameCount)) + fileExtention, bytes);
+            File.WriteAllBytes(MainController.Instance.Image_subsets  + "/C" + cameraIndex.ToString() + "/"  + GetXDigitNum(4,(Time.frameCount - CameraManager.Instance.BeginFrameCount)) + fileExtention, bytes);
 
             yield return new WaitForEndOfFrame();
         }

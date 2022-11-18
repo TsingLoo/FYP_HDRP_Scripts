@@ -14,10 +14,8 @@ public class CameraManager : SingletonForMonobehaviour<CameraManager>
     public const int RESOLUTION_WIDTH = 1920;
     public const int RESOLUTION_HEIGHT = 1080;
 
-    //public const string Image_subsets = nameof(Image_subsets);
-    public const string Image_subsets = @"F:\PycharmProjects\MultiviewX_FYP\Image_subsets";    
-    //public const string matchings = nameof(matchings);
-    public const string matchings = @"F:\PycharmProjects\MultiviewX_FYP\matchings";
+    //public string parentFolder;
+
 
     public enum eFileExtention
     {
@@ -27,7 +25,7 @@ public class CameraManager : SingletonForMonobehaviour<CameraManager>
     public eFileExtention ImageFormat = eFileExtention.jpg;
 
 
-    [SerializeField] GameObject CameraPrefab_Normal;
+    private GameObject CameraPrefab_Normal;
     [SerializeField] Transform center;
 
     public UnityAction<string> ExportThisFrame;
@@ -46,6 +44,7 @@ public class CameraManager : SingletonForMonobehaviour<CameraManager>
         switch (CameraPlaceType)
         {
             case (int)ConfigPanel.eCameraGenerateMethod.Ellipse:
+                Debug.Log("[Debug]" + CameraPrefab_Normal.ToString());
                 Utils.PlaceObjByEllipse(CameraPrefab_Normal, center,nums,PlayerPrefs.GetFloat(SaveDataManager.ELLIPSE_MAJORAXIS),PlayerPrefs.GetFloat(SaveDataManager.ELLIPSE_MINORAXIS),height);
 
                 break;
@@ -58,8 +57,13 @@ public class CameraManager : SingletonForMonobehaviour<CameraManager>
 
     private void Awake()
     {
+        Debug.Log("[Debug] CamraManager init");
         BeginFrameCount = PlayerPrefs.GetInt(SaveDataManager.START_FRAME) + Time.frameCount;
         EndFrameCount = PlayerPrefs.GetInt(SaveDataManager.END_FRAME)+ Time.frameCount;
+
+        CameraPrefab_Normal = PrefabsLoader.Instance.camera_normal;
+
+
     }
 
     public void FramesSetting(int FramesSettingType) 
@@ -79,7 +83,7 @@ public class CameraManager : SingletonForMonobehaviour<CameraManager>
 
     void Update()
     {
-        Debug.Log("[IO]FrameCount " + Time.frameCount + BeginFrameCount + "  " + EndFrameCount);
+        Debug.Log("[IO]FrameCount " + Time.frameCount + " " + BeginFrameCount + "  " + EndFrameCount);
         if (Time.frameCount >= BeginFrameCount && Time.frameCount <= EndFrameCount)
         {
             

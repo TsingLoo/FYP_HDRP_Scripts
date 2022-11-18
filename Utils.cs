@@ -125,7 +125,8 @@ public class Utils: MonoBehaviour
                 Obj.name = "Camera" + i.ToString();
                 Obj.GetComponent<Camera>().targetDisplay = i;
                 Obj.GetOrAddComponent<ImageExporterController>().cameraIndex= i + 1;
-                Obj.transform.LookAt(lookatTransform.position);
+                // Obj.transform.LookAt(nert);
+                Obj.transform.LookAt(new Vector3(0,0,0));
             }
 
         }

@@ -4,9 +4,18 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MainController : MonoBehaviour
+public class MainController : SingletonForMonobehaviour<MainController>
 {
-   
+
+    public string parentFolder;
+    [HideInInspector]   public string Image_subsets;
+    [HideInInspector]   public string matchings;
+
+    private void Awake()
+    {
+        Image_subsets = MainController.Instance.parentFolder + @"\Image_subsets";
+        matchings = MainController.Instance.parentFolder + @"\matchings";
+    }
 
     private void Start()
     { 
@@ -20,22 +29,23 @@ public class MainController : MonoBehaviour
         SceneManager.sceneLoaded += SceneLoadedHandler;
         //Debug.Log(PlayerPrefs.GetString("Maweasda",null))
 
-        DirectoryInfo Image_subsets = new DirectoryInfo(CameraManager.Image_subsets);
-        if (Image_subsets.Exists)
+        DirectoryInfo dir_image_subsets = new DirectoryInfo(Image_subsets);
+        if (dir_image_subsets.Exists)
         {
-            Image_subsets.Delete(true);
+            dir_image_subsets.Delete(true);
             Debug.Log("[IO]" + Image_subsets.ToString() + " have been deleted");
         }
 
-        DirectoryInfo matchings = new DirectoryInfo(CameraManager.matchings);
-        if (matchings.Exists)
+        DirectoryInfo dir_matchings = new DirectoryInfo(matchings);
+
+        if (dir_matchings.Exists)
         {
-            matchings.Delete(true);
+            dir_matchings.Delete(true);
             Debug.Log("[IO]" + matchings.ToString() + " have been deleted");
         }
 
-        Directory.CreateDirectory(CameraManager.matchings);
-        Debug.Log("[IO]文件夹" + CameraManager.matchings + "创建成功");
+        Directory.CreateDirectory(matchings);
+        Debug.Log("[IO]文件夹" + matchings + "创建成功");
     }
 
     private void SceneLoadedHandler(Scene currentScene,LoadSceneMode loadSceneMode) 
