@@ -33,10 +33,14 @@ public static class SaveDataManager
 
     #endregion
 
-    #region ImageExporterControlle
+    #region ImageExporterController
     public const string IS_ENABLE_ALPHA = nameof(IS_ENABLE_ALPHA);
     public const string RESOLUTION = nameof(RESOLUTION);
     public const string FILENAME = nameof(FILENAME);
     public const string FILEPATH = nameof(FILEPATH);
     #endregion
+
+    //0 - Export Images 1 - Validate Calibrations 
+    public const string RUNNING_MODE = nameof(RUNNING_MODE);
+
 }

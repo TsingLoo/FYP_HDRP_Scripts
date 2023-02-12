@@ -9,6 +9,7 @@ using System;
 using TMPro;
 using System.IO;
 using taecg.tools.ImageExporter;
+using Unity.Mathematics;
 
 public class Utils: MonoBehaviour
 {
@@ -60,6 +61,83 @@ public class Utils: MonoBehaviour
 #endif 
     }
 
+    public static string XDigit(int num, int X)
+    {
+        int temp  = num;
+        int digits = 0;
+        while (temp > 0)
+        {
+            temp = temp / 10;
+            digits++;
+        }
+
+        //Debug.Log(nameof(digits) + digits);
+
+        string Nzero = "";
+        for (int i = 0; i < X - digits; i++)
+        {
+            Nzero = Nzero + "0";
+        }
+
+        //Debug.Log(nameof(Nzero) + Nzero);
+
+        string numStr = num.ToString();
+        return Nzero + numStr;
+    }
+
+    /// <summary>
+    /// Please enable usePhysicalProperties forsensorSize.
+    /// </summary>
+    /// <param name="cam"></param>
+    /// <returns></returns>
+    public static float3x3 GetIntrinsicByPhysical(Camera cam)
+    {
+        float w = cam.pixelWidth;
+        float h = cam.pixelHeight;
+
+        float pixel_aspect_ratio = w /h;
+
+        float fx = cam.focalLength * (w / cam.sensorSize.x);
+        float fy = cam.focalLength * pixel_aspect_ratio * (h / cam.sensorSize.y);
+        //float fy = cam.focalLength * (h / cam.sensorSize.y);
+
+        float u_0 = w / 2;
+        float v_0 = h / 2;
+
+        //IntrinsicMatrix in row major
+        float3x3 camIntriMatrix = new float3x3(new float3(fx, 0f, u_0),
+                                               new float3(0f, fy, v_0),
+                                               new float3(0f, 0f, 1f));
+
+   
+        return camIntriMatrix;
+    }
+
+
+    //Inspired by https://www.cnblogs.com/xiaohuidi/p/15711767.html
+    public static float3x3 GetIntrinsicByFoV(Camera cam) 
+    {
+        float w = cam.pixelWidth;
+        float h = cam.pixelHeight;
+        float fov = cam.fieldOfView;
+
+        float u_0 = w / 2;
+        float v_0 = h / 2;
+
+        float fx = w / (2 * (math.tan((fov / 2) * (math.PI / 180))));
+        float fy = h / (2 * (math.tan((fov / 2) * (math.PI / 180))));
+
+        float3x3 camIntriMatrix = new float3x3(new float3(fx, 0f, u_0),
+                                       new float3(0f, fy, v_0),
+                                       new float3(0f, 0f, 1f));
+
+        Debug.Log(cam.projectionMatrix);
+        
+        return camIntriMatrix;
+
+        // m_ProjectionMatrix = Clone(camera.projectionMatrix);
+        // m_WorldToCameraMatrix = Clone(camera.worldToCameraMatrix);
+    }
 
 
 
@@ -121,12 +199,12 @@ public class Utils: MonoBehaviour
             //如果此go是相机
             if (go.GetComponent<Camera>())
             {
-                var Obj = Instantiate(go, pos, Quaternion.identity);
+                var Obj = Instantiate(go, lookatTransform.position +  pos, Quaternion.identity);
                 Obj.name = "Camera" + i.ToString();
                 Obj.GetComponent<Camera>().targetDisplay = i;
                 Obj.GetOrAddComponent<ImageExporterController>().cameraIndex= i + 1;
                 // Obj.transform.LookAt(nert);
-                Obj.transform.LookAt(new Vector3(0,0,0));
+                Obj.transform.LookAt(lookatTransform.position);
             }
 
         }

@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using Unity.VisualScripting.Antlr3.Runtime.Collections;
 using UnityEngine;
 
 public class PeopleManager : SingletonForMonobehaviour<PeopleManager>
@@ -20,8 +23,12 @@ public class PeopleManager : SingletonForMonobehaviour<PeopleManager>
 
     public float walkingSpeed;
 
+    public float Scaler; 
+
     //keep track of the each person
     public List<PersonBound> bounds_list = new List<PersonBound>();
+
+    public List<int> PID_List = new List<int>();
 
     private ArrayList humanList = new ArrayList();  //list of Index of human, starts from zero
     private ArrayList objectList = new ArrayList();
@@ -72,8 +79,14 @@ public class PeopleManager : SingletonForMonobehaviour<PeopleManager>
                 float X = UnityEngine.Random.Range(smallestX, largestX);
                 float Z = UnityEngine.Random.Range(smallestZ, largestZ);
                 Vector3 SpawnPosition = new Vector3(X, 0, Z);
-                GameObject human = Instantiate(humanPrefab, SpawnPosition, UnityEngine.Random.rotation);
+                GameObject human = Instantiate(humanPrefab, CameraManager.Instance.center.position + SpawnPosition, UnityEngine.Random.rotation);
                 var bound = human.GetOrAddComponent<PersonBound>();
+                int PID = UnityEngine.Random.Range(0, 1000);
+                while (PID_List.Contains(PID))
+                {
+                    PID = UnityEngine.Random.Range(0, 1000);
+                }
+                bound.PID = PID;
                 bounds_list.Add(bound);
                 //objectList.Add(human);
             }
@@ -120,6 +133,7 @@ public class PeopleManager : SingletonForMonobehaviour<PeopleManager>
         }
         return -1;
     }
+
 
 
     /*

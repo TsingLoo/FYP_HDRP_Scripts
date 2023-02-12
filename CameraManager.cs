@@ -24,17 +24,20 @@ public class CameraManager : SingletonForMonobehaviour<CameraManager>
     }
     public eFileExtention ImageFormat = eFileExtention.jpg;
 
+    public int RunningMode;
 
     private GameObject CameraPrefab_Normal;
-    [SerializeField] Transform center;
+    public Transform center;
 
     public UnityAction<string> ExportThisFrame;
     public UnityAction EndExport;
-    
-    public int BeginFrameCount; 
+
+    [HideInInspector]
+    public int BeginFrameCount;
+    [HideInInspector]
     public int EndFrameCount;
 
-    public void PlaceCamera(int CameraPlaceType) 
+    public void PlaceCamera(int CameraPlaceType)
     {
         int nums = PlayerPrefs.GetInt(SaveDataManager.CAMERA_NUM);
         float height = PlayerPrefs.GetFloat(SaveDataManager.CAMERA_HEIGHT);
@@ -60,6 +63,9 @@ public class CameraManager : SingletonForMonobehaviour<CameraManager>
         Debug.Log("[Debug] CamraManager init");
         BeginFrameCount = PlayerPrefs.GetInt(SaveDataManager.START_FRAME) + Time.frameCount;
         EndFrameCount = PlayerPrefs.GetInt(SaveDataManager.END_FRAME)+ Time.frameCount;
+        RunningMode = PlayerPrefs.GetInt(SaveDataManager.RUNNING_MODE);
+
+        Debug.Log("[Debug] Running Mode is " + RunningMode);
 
         CameraPrefab_Normal = PrefabsLoader.Instance.camera_normal;
 
@@ -83,19 +89,29 @@ public class CameraManager : SingletonForMonobehaviour<CameraManager>
 
     void Update()
     {
-        Debug.Log("[IO]FrameCount " + Time.frameCount + " " + BeginFrameCount + "  " + EndFrameCount);
-        if (Time.frameCount >= BeginFrameCount && Time.frameCount <= EndFrameCount)
+
+
+        if (RunningMode == 0)
+        {
+            Debug.Log("[IO]FrameCount " + Time.frameCount + " " + BeginFrameCount + "  " + EndFrameCount);
+
+            if (Time.frameCount >= BeginFrameCount && Time.frameCount <= EndFrameCount)
+            {
+
+                Debug.Log("[IO]FrameCount " + Time.frameCount);
+                ExportThisFrame?.Invoke("." + ImageFormat.ToString());
+            }
+            else if (Time.frameCount > EndFrameCount)
+            {
+                EndExport?.Invoke();
+            }
+        }
+        else 
         {
             
-            Debug.Log("[IO]FrameCount " + Time.frameCount);
-            ExportThisFrame?.Invoke("." + ImageFormat.ToString());
-        }
-        else if (Time.frameCount > EndFrameCount)
-        {
-            EndExport?.Invoke();
         }
 
-     
+
 
         //if (Input.GetKeyDown(KeyCode.O))
         //{

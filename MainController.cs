@@ -1,25 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainController : SingletonForMonobehaviour<MainController>
 {
 
+
     public string parentFolder;
-    [HideInInspector]   public string Image_subsets;
-    [HideInInspector]   public string matchings;
+    [HideInInspector] public string Image_subsets;
+    [HideInInspector] public string matchings;
+    [SerializeField] private Image Calibrate_Reference_Image;
+    Sprite reference_sprite;
 
     private void Awake()
     {
-        Image_subsets = MainController.Instance.parentFolder + @"\Image_subsets";
-        matchings = MainController.Instance.parentFolder + @"\matchings";
+        Image_subsets = parentFolder + @"\Image_subsets";
+        matchings = parentFolder + @"\matchings";
     }
 
     private void Start()
-    { 
-        
+    {
 
         DontDestroyOnLoad(gameObject);
 
@@ -48,16 +52,27 @@ public class MainController : SingletonForMonobehaviour<MainController>
         Debug.Log("[IO]文件夹" + matchings + "创建成功");
     }
 
-    private void SceneLoadedHandler(Scene currentScene,LoadSceneMode loadSceneMode) 
+    private void SceneLoadedHandler(Scene currentScene, LoadSceneMode loadSceneMode)
     {
         UIManager.Instance.PopPanel();
 
         Debug.Log("[Scene]Scene " + currentScene.buildIndex + " loaded successfully");
 
-        if (currentScene.buildIndex == 1) 
+        if (currentScene.buildIndex != 0)
         {
-            CameraManager.Instance.PlaceCamera(PlayerPrefs.GetInt(SaveDataManager.CAMERA_GENERATE_TYPE));
+
+            if (CameraManager.Instance.RunningMode == 0)
+            {
+                CameraManager.Instance.PlaceCamera(PlayerPrefs.GetInt(SaveDataManager.CAMERA_GENERATE_TYPE));
+            }
+            else
+            {
+                reference_sprite = UtilExtension.TextureToSprite(UtilExtension.LoadTextureByIO(parentFolder + @"\validate\0003.png"));
+
+                Calibrate_Reference_Image.sprite = reference_sprite;
+            }
         }
     }
-
 }
+
+

@@ -38,6 +38,10 @@ namespace taecg.tools.ImageExporter
             CameraManager.Instance.ExportThisFrame += ExportThisFrameHandler;
             CameraManager.Instance.EndExport += EndExportHandler;
 
+
+            Debug.Log("Intrics is " + Utils.GetIntrinsicByFoV(cam));
+            Debug.Log("Intrics is " + nameof(Utils.GetIntrinsicByPhysical) + Utils.GetIntrinsicByPhysical(cam));
+
         }
 	
         // Update is called once per frame

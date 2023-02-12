@@ -9,6 +9,7 @@ using UnityEditor.Search;
 using System.Reflection;
 using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
+using UnityEngine.Windows;
 
 public class ConfigPanel : BasePanel
 {
@@ -146,25 +147,69 @@ public class ConfigPanel : BasePanel
 
     #region PanelUI
     [Header("Next_Button")]
-    [SerializeField] GameObject obj_NextButton;
-    Button btn_Next;
+    [SerializeField] GameObject obj_OutdoorButton;
+    [SerializeField] GameObject obj_ParkButton;
+    [SerializeField] GameObject obj_ExportToggle;
+    [SerializeField] GameObject obj_ValibrateToggle;
+    Button btn_Outdoor;
+    Button btn_Park;
+
+    Toggle[] toggles_Mode;
 
     public override void OnEnter()
     {
         InitCameraGenerateMethod();
         InitFramesSettings();
-        btn_Next = obj_NextButton.GetOrAddComponent<Button>();
-        btn_Next.onClick.AddListener(ClickNextButtonHandler);
+        btn_Outdoor = obj_OutdoorButton.GetOrAddComponent<Button>();
+        btn_Outdoor.onClick.AddListener(ClickOutDoorButtonHandler);
+
+        btn_Park = obj_ParkButton.GetOrAddComponent<Button>();
+        btn_Park.onClick.AddListener(ClickParkButtonHandler);
+
+        toggles_Mode = new Toggle[2];
+        toggles_Mode[0] = obj_ExportToggle.GetOrAddComponent<Toggle>();
+        toggles_Mode[1] = obj_ValibrateToggle.GetOrAddComponent<Toggle>();
+        toggles_Mode[0].onValueChanged.AddListener((isOn) => ToggleOnValueChanged(isOn, 0));
+        toggles_Mode[1].onValueChanged.AddListener((isOn) => ToggleOnValueChanged(isOn, 1));
+        toggles_Mode[PlayerPrefs.GetInt(SaveDataManager.RUNNING_MODE)].isOn = true ;
+        ToggleOnValueChanged(true, PlayerPrefs.GetInt(SaveDataManager.RUNNING_MODE));
     }
 
-    private void ClickNextButtonHandler() 
+    private void ToggleOnValueChanged(bool isOn, int index) 
+    {
+        //œ‘ æÃÿ∂®“≥
+        if (isOn)
+        {
+            Debug.Log("[UIManager] Toggle is triggered " + index );
+            PlayerPrefs.SetInt(SaveDataManager.RUNNING_MODE, index);
+        }
+
+    }
+
+    private void ClickOutDoorButtonHandler() 
     {
         UIManager.Instance.PopPanel();
         UIManager.Instance.OpenPanel(eUIPanelType.LoadingPanel);
         PlayerPrefs.Save();
 
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene("OutdoorsScene");
 
+    }
+
+    private void ClickParkButtonHandler()
+    {
+        UIManager.Instance.PopPanel();
+        UIManager.Instance.OpenPanel(eUIPanelType.LoadingPanel);
+        PlayerPrefs.Save();
+
+        SceneManager.LoadScene("ParkScene");
+
+    }
+
+    private void ClickValidateButtonHandler() 
+    {
+        UIManager.Instance.PopPanel();
+        
     }
 
     private bool CanNext() 
